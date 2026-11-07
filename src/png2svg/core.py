@@ -59,3 +59,27 @@ def hexagon_centers(width: int, height: int, size: float) -> list[tuple[float, f
         x += horizontal_spacing
         col += 1
     return centers
+
+
+def image_to_svg(img: Image.Image, size: float = 10, radius: int = 3) -> str:
+    """Convert a Pillow image into a complete hexagonal SVG document.
+
+    size:   distance from a hexagon center to its vertices.
+    radius: how far around each center to sample the color.
+    """
+    rgb_img = img.convert("RGB")
+    width, height = rgb_img.size
+
+    hexagons = []
+    for cx, cy in hexagon_centers(width, height, size):
+        color = sample_color(rgb_img, int(cx), int(cy), radius)
+        hexagons.append(hexagon_svg(cx, cy, size, color))
+
+    body = "\n".join(hexagons)
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}">\n'
+        f"{body}\n"
+        f"</svg>"
+    )

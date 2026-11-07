@@ -1,6 +1,6 @@
 from PIL import Image
 
-from png2svg.core import hexagon_centers, hexagon_svg, sample_color
+from png2svg.core import hexagon_centers, hexagon_svg, image_to_svg, sample_color
 
 
 def test_hexagon_svg_is_a_polygon():
@@ -54,3 +54,23 @@ def test_larger_image_has_more_hexagons():
     small = hexagon_centers(50, 50, 10)
     large = hexagon_centers(200, 200, 10)
     assert len(large) > len(small)
+
+
+def test_image_to_svg_produces_valid_svg():
+    img = Image.new("RGB", (100, 100), (0, 128, 255))
+    svg = image_to_svg(img, size=10, radius=3)
+    assert svg.startswith("<svg")
+    assert svg.rstrip().endswith("</svg>")
+
+
+def test_image_to_svg_contains_hexagons():
+    img = Image.new("RGB", (100, 100), (0, 128, 255))
+    svg = image_to_svg(img, size=10, radius=3)
+    assert "<polygon" in svg
+
+
+def test_image_to_svg_uses_image_color():
+    # a uniform blue image → hexagons filled with that blue
+    img = Image.new("RGB", (100, 100), (0, 128, 255))
+    svg = image_to_svg(img, size=10, radius=3)
+    assert "rgb(0,128,255)" in svg

@@ -13,3 +13,5 @@ site/
 __marimo__/
 *.html
 dist/
+test.svg
+*.svg
