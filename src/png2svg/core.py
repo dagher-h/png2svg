@@ -40,3 +40,22 @@ def sample_color(img: Image.Image, cx: int, cy: int, radius: int) -> tuple[int, 
     avg_g = sum(greens) // len(greens)
     avg_b = sum(blues) // len(blues)
     return (avg_r, avg_g, avg_b)
+
+
+def hexagon_centers(width: int, height: int, size: float) -> list[tuple[float, float]]:
+    """Return the center points of all hexagons covering a width x height area."""
+    centers = []
+    horizontal_spacing = 1.5 * size
+    vertical_spacing = math.sqrt(3) * size
+    col = 0
+    x = 0.0
+    while x <= width:
+        # odd columns are shifted down by half a row
+        y_offset = vertical_spacing / 2 if col % 2 == 1 else 0.0
+        y = y_offset
+        while y <= height:
+            centers.append((x, y))
+            y += vertical_spacing
+        x += horizontal_spacing
+        col += 1
+    return centers
