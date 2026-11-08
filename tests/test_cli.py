@@ -1,4 +1,3 @@
-
 from png2svg.cli import build_parser, main
 
 
